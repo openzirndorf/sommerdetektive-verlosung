@@ -23,21 +23,20 @@ gehostet – funktioniert auch offline, keine externen Ressourcen).
 3. **Ziehen:** Sind Gewinnpakete geladen, wählt ein Dropdown über dem Ziehen-Button, für
    welches Paket als Nächstes gezogen wird – vorbelegt ist immer das erste noch offene Paket
    in Listenreihenfolge, lässt sich aber jederzeit manuell auf ein anderes Paket umstellen
-   (bleibt dann so lange ausgewählt, bis dieses Paket komplett vergeben ist). Der
-   Ziehen-Button zieht mit kurzer Shuffle-Animation eine zufällige Person aus dem Lostopf für
-   das gewählte Paket, danach ein Popup mit Name + Konfetti, das erst mit „Weiter →“
-   weggeht. Hat das gewählte Paket mehr als einen offenen Platz, erscheint zusätzlich
-   „🎲 Alle X auf einmal ziehen“ – zieht die restlichen Plätze automatisch nacheinander
-   durch (kein Einzel-Popup pro Person), und zeigt am Ende alle Gewinner:innen dieses Pakets
-   zusammen in einem Popup (z.B. „5 Playmobil Anhänger in einem Rutsch“). Sind alle Pakete
-   vollständig vergeben, sperren sich beide Buttons, auch wenn noch Namen im Lostopf sind.
-   Über dem Draw-Bereich zeigt „🏆 X von Y Gewinnen insgesamt vergeben“ den Gesamtfortschritt.
+   (bleibt dann so lange ausgewählt, bis dieses Paket komplett vergeben ist; die Anzahl
+   offener Plätze steht direkt in der Dropdown-Option, z.B. „Playmobil Anhänger (noch 5 von
+   5)“). Ein Klick auf „🎲 Ziehen“ zieht dann **immer das ganze gewählte Paket auf einmal** –
+   bei 1 offenem Platz eine Person, bei 5 alle 5 nacheinander (kurze Shuffle-Animation pro
+   Person, kein Einzel-Popup dazwischen), und zeigt am Ende alle gezogenen Gewinner:innen
+   zusammen in einem Popup mit Konfetti, das erst mit „Weiter →“ weggeht. Sind alle Pakete
+   vollständig vergeben, sperrt sich der Button, auch wenn noch Namen im Lostopf sind. Über
+   dem Draw-Bereich zeigt „🏆 X von Y Gewinnen insgesamt vergeben“ den Gesamtfortschritt.
    Jede Person gewinnt maximal einmal – fest verdrahtet direkt vor jeder Ziehung, nicht nur
    durch die Reihenfolge der Bedienung.
-4. **Rückgängig:** „↩️ Rückgängig: [Name]“ unter den Ziehen-Buttons macht die allerletzte
-   Ziehung wieder rückgängig (Person zurück in den Lostopf, Protokoll-Eintrag weg, Paket-
-   Zähler sinkt automatisch mit) – Sicherheitsnetz für Fehlklicks, z.B. falsches Paket im
-   Dropdown gewählt. Während „Alle X auf einmal ziehen“ läuft, ist der Button ausgeblendet.
+4. **Rückgängig:** „↩️ Rückgängig: [Name]“ unter dem Ziehen-Button macht die allerletzte
+   einzelne Ziehung wieder rückgängig (Person zurück in den Lostopf, Protokoll-Eintrag weg,
+   Paket-Zähler sinkt automatisch mit) – Sicherheitsnetz für Fehlklicks, z.B. falsches Paket
+   im Dropdown gewählt. Während eine Ziehung läuft, ist der Button ausgeblendet.
 5. **Präsentationsmodus:** „🖥️ Bühne“ oben rechts blendet Gewinnpakete-/Lostopf-Eingabe und
    das Protokoll aus, vergrößert Bühne, Buttons und Popup – gedacht für einen Beamer/Screen
    vorm Publikum, während die Verwaltung (Listen einfügen, Protokoll einsehen) auf dem

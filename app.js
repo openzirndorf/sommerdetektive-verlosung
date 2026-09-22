@@ -63,7 +63,6 @@ const el = {
   currentPrize: document.getElementById("sv-current-prize"),
   stage: document.getElementById("sv-stage"),
   draw: document.getElementById("sv-draw"),
-  drawAll: document.getElementById("sv-draw-all"),
   remaining: document.getElementById("sv-remaining"),
   log: document.getElementById("sv-log"),
   logToggle: document.getElementById("sv-log-toggle"),
@@ -462,7 +461,6 @@ function renderIdleStage() {
 
 function renderCurrentPrizeAndDrawState() {
   el.currentPrize.innerHTML = "";
-  el.drawAll.hidden = true;
 
   if (state.prizes.length === 0) {
     // Keine Gewinnpakete hinterlegt: reine Namensziehung ohne Zuordnung.
@@ -517,16 +515,6 @@ function renderCurrentPrizeAndDrawState() {
   }
 
   el.draw.disabled = state.pool.length === 0 || batchInProgress;
-
-  // "Auf einmal ziehen" nur anbieten, wenn es für das gewählte Paket
-  // tatsächlich etwas abzukürzen gibt (mehr als 1 offener Platz).
-  const selectedPrize = selectable.find((p) => p.name === selectedPrizeName);
-  const selRemaining = selectedPrize ? remainingFor(selectedPrize) : 0;
-  if (selRemaining > 1) {
-    el.drawAll.hidden = false;
-    el.drawAll.textContent = `🎲 Alle ${selRemaining} auf einmal ziehen`;
-    el.drawAll.disabled = state.pool.length === 0 || batchInProgress;
-  }
 }
 
 function render() {
@@ -572,7 +560,6 @@ function drawOne(forcedPrizeName, showModal = true) {
   }
 
   el.draw.disabled = true;
-  el.drawAll.disabled = true;
 
   const wrap = document.createElement("div");
   wrap.className = "winner-wrap";
@@ -636,6 +623,21 @@ function drawOne(forcedPrizeName, showModal = true) {
   });
 }
 
+/** Einziger Ziehen-Button: mit geladenen Gewinnpaketen wird immer das
+    komplette gewählte Paket auf einmal gezogen (auch wenn nur 1 Platz
+    übrig ist – kein separater "Alle X auf einmal"-Button mehr, die Anzahl
+    steht schon im Dropdown). Ohne Gewinnpakete (Namensziehung ohne
+    Zuordnung) gibt es kein "ganzes Paket", das gezogen werden könnte –
+    dann bleibt es bei einer einzelnen Person pro Klick. */
+async function handleDrawClick() {
+  if (batchInProgress) return;
+  if (state.prizes.length > 0) {
+    await drawAllForSelected();
+  } else {
+    await drawOne();
+  }
+}
+
 /** Zieht nacheinander alle noch offenen Plätze des aktuell gewählten
     Gewinnpakets, ohne dass zwischendurch erneut geklickt werden muss –
     z.B. für "5 Playmobil Anhänger in einem Rutsch". Wiederverwendet
@@ -653,7 +655,6 @@ async function drawAllForSelected() {
 
   batchInProgress = true;
   el.draw.disabled = true;
-  el.drawAll.disabled = true;
 
   const winners = [];
   for (let i = 0; i < toDraw; i++) {
@@ -777,8 +778,7 @@ function handleReset() {
 
 el.load.addEventListener("click", handleLoad);
 el.prizesLoad.addEventListener("click", handlePrizesLoad);
-el.draw.addEventListener("click", () => drawOne());
-el.drawAll.addEventListener("click", drawAllForSelected);
+el.draw.addEventListener("click", handleDrawClick);
 el.logToggle.addEventListener("click", handleLogToggle);
 el.copy.addEventListener("click", handleCopy);
 el.reset.addEventListener("click", handleReset);

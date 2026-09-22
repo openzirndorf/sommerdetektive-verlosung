@@ -205,7 +205,6 @@ main { max-width: var(--sv-max-width); margin: 0 auto; padding: 20px 16px calc(4
 .sv-btn:active { transform: translateY(2px); box-shadow: none; }
 .sv-btn:disabled { background: var(--sd-kraft); box-shadow: none; cursor: not-allowed; opacity: 0.6; }
 .sv-btn--accent { background: var(--sd-accent); box-shadow: 0 2px 0 #a6432b; }
-.sv-btn--amber { background: var(--sd-amber); color: var(--sd-ink); box-shadow: 0 2px 0 #c9962c; }
 .sv-btn--ghost {
   background: transparent;
   color: var(--sd-ink-soft);
