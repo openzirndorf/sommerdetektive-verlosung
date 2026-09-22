@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Verlosungs-Tool für die Zirndorfer Sommerdetektive: Losnamen einfügen, live ziehen, Ergebnis protokollieren. Läuft komplett im Browser, keine Daten verlassen das Gerät." />
+  <meta name="theme-color" content="#4b3620" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Sommerdetektive – Verlosung</title>
+</head>
+<body>
+  <header class="sv-header">
+    <div class="sv-header-inner">
+      <img src="images/logo2.png" alt="Sommerdetektive Maskottchen" />
+      <span class="sv-header-title">
+        <span class="eyebrow">Zirndorfer Sommerdetektive</span>
+        <span class="title">🎉 Verlosung</span>
+      </span>
+      <button id="sv-presentation-toggle" class="sv-btn sv-btn--ghost sv-btn--sm sv-presentation-toggle" title="Präsentationsmodus: blendet Eingabe/Protokoll aus, nur Bühne groß">🖥️ Bühne</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="sd-folder sv-admin-only">
+      <h2>1 · Gewinnpakete</h2>
+      <p class="sv-intro">
+        Ein Gewinnpaket pro Zeile, am Zeilenende die <strong>Anzahl</strong> (z.&nbsp;B. aus
+        zwei Excel-Spalten „Gewinnpaket“ und „Anzahl“ eingefügt). Die Ziehung vergibt die
+        Pakete <strong>in dieser Reihenfolge</strong> – erst wenn eines vollständig vergeben
+        ist, geht's mit dem nächsten weiter. Optional: ohne Gewinnpakete funktioniert die
+        Ziehung unten auch einfach ohne Zuordnung.
+      </p>
+      <textarea id="sv-prizes-input" class="sv-textarea sd-type" placeholder="Gutschein Eisdiele&#9;5&#10;Kinogutschein&#9;3&#10;Überraschungspaket&#9;2"></textarea>
+      <div class="sv-row">
+        <button id="sv-prizes-load" class="sv-btn">🎁 Gewinne laden</button>
+        <span id="sv-prizes-load-info" class="sv-count"></span>
+      </div>
+      <div id="sv-prizes" class="sv-pool" aria-live="polite"></div>
+      <p id="sv-prizes-summary" class="sv-count" style="margin-top: 10px;"></p>
+    </section>
+
+    <section class="sd-folder sv-admin-only">
+      <h2>2 · Lostopf befüllen</h2>
+      <p class="sv-intro">
+        Losnamen aus eurer Excel-Liste hier einfügen – <strong>ein Losname pro Zeile</strong>
+        (z.&nbsp;B. die Spalte „Detektivname“: laut Gewinnspielregeln ist er der Losname
+        bei der Ziehung, nie die Mailadresse). Leere Zeilen und exakte Duplikate werden
+        automatisch entfernt.
+      </p>
+      <textarea id="sv-input" class="sv-textarea sd-type" placeholder="Agentin Fuchs&#10;Kommissar Luchs&#10;Inspektorin Wildkatze&#10;…"></textarea>
+      <div class="sv-row">
+        <button id="sv-load" class="sv-btn">📋 Lostopf befüllen</button>
+        <span id="sv-load-info" class="sv-count"></span>
+      </div>
+      <div id="sv-pool" class="sv-pool" aria-live="polite"></div>
+    </section>
+
+    <section class="sd-folder">
+      <h2>3 · Ziehung</h2>
+      <div id="sv-current-prize" class="sv-row" style="margin-top: 0;"></div>
+      <div id="sv-stage" class="sv-stage">
+        <span class="placeholder">Lostopf befüllen, dann geht's los 🔍</span>
+      </div>
+      <button id="sv-draw" class="sv-btn sv-btn--accent sv-draw-btn" disabled>🎲 Jetzt ziehen</button>
+      <button id="sv-draw-all" class="sv-btn sv-btn--amber sv-draw-btn" hidden></button>
+      <p id="sv-remaining" class="sv-count" style="margin-top: 10px;"></p>
+      <button id="sv-undo" class="sv-btn sv-btn--ghost sv-btn--sm" style="margin-top: 10px;" hidden></button>
+    </section>
+
+    <section class="sd-folder sv-admin-only">
+      <h2>4 · Ziehungsprotokoll</h2>
+      <div class="sv-row" style="margin-top: 0;">
+        <button id="sv-log-toggle" class="sv-btn sv-btn--ghost sv-btn--sm">📦 Nach Gewinn gruppieren</button>
+      </div>
+      <ul id="sv-log" class="sv-log">
+        <li class="sv-log-empty">Noch keine Ziehung.</li>
+      </ul>
+      <div class="sv-row">
+        <button id="sv-copy" class="sv-btn sv-btn--ghost sv-btn--sm">📄 Ergebnis kopieren</button>
+        <button id="sv-reset" class="sv-btn sv-btn--ghost sv-btn--sm">♻️ Alles zurücksetzen</button>
+      </div>
+    </section>
+
+    <p class="sv-footer">
+      Läuft nur in diesem Browser-Tab · nichts wird hochgeladen oder gespeichert
+      außer lokal auf diesem Gerät (damit ein versehentliches Neuladen während der
+      Ziehung nichts zerstört) · <a href="https://charunity.com/index.html" target="_blank" rel="noopener noreferrer">ChaRUNity e.V.</a>
+    </p>
+  </main>
+
+  <canvas id="sv-confetti-canvas" class="sv-confetti-canvas" aria-hidden="true"></canvas>
+
+  <div id="sv-winner-modal" class="sv-modal-overlay" hidden>
+    <div class="sv-modal" role="dialog" aria-modal="true" aria-labelledby="sv-modal-name">
+      <span id="sv-modal-prize" class="prize-label"></span>
+      <span id="sv-modal-stamp" class="sd-stamp sd-stamp--green">Gezogen</span>
+      <div id="sv-modal-name" class="sv-modal-name sd-type"></div>
+      <button id="sv-modal-continue" class="sv-btn sv-btn--accent">Weiter →</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
