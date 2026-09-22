@@ -132,6 +132,23 @@ function burstConfetti() {
   requestAnimationFrame(frame);
 }
 
+/** Schriftgröße für den/die Gewinnernamen im Popup – abhängig davon, wie
+    viele Namen gleichzeitig gezeigt werden (Einzelziehung vs. "Alle X auf
+    einmal ziehen") UND vom Präsentationsmodus. Bewusst als Inline-Style
+    statt fester CSS-Regeln: eine feste Größe für "viele Namen" gibt es
+    nicht – 2 Namen dürfen groß sein, 8 Namen müssen klein genug sein, um
+    ohne Abschneiden/Scrollen alle gleichzeitig lesbar zu bleiben. */
+function applyModalNameSizing(count) {
+  const presentation = document.body.classList.contains("sv-presentation");
+  let px;
+  if (count <= 1) px = presentation ? 44 : 30;
+  else if (count <= 3) px = presentation ? 38 : 24;
+  else if (count <= 5) px = presentation ? 30 : 19;
+  else if (count <= 8) px = presentation ? 23 : 16;
+  else px = presentation ? 18 : 13;
+  el.modalName.style.fontSize = px + "px";
+}
+
 /** Zeigt den Gewinner-Popup und löst erst auf, wenn er weggeklickt (oder
     mit Enter/Leertaste auf dem fokussierten Weiter-Button bestätigt) wird.
     namesOrName: ein einzelner Name (Einzelziehung) ODER ein Array mehrerer
@@ -146,6 +163,7 @@ function showWinnerModal(namesOrName, prizeName) {
     el.modalStamp.textContent = names.length > 1 ? "Alle gezogen" : "Gezogen";
     el.modalName.innerHTML = "";
     el.modalName.classList.toggle("sv-modal-name--list", names.length > 1);
+    applyModalNameSizing(names.length);
     for (const name of names) {
       const line = document.createElement("div");
       line.textContent = name;
